@@ -231,5 +231,5 @@ void main()
    break;
 
   }
- } while (c != 7);
+ } while (c != 6);
 }
