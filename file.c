@@ -1,23 +1,23 @@
 #include<stdio.h>
 #include<stdlib.h>
-struct student
+struct employee
 {
- int rollno;
+ int id;
  char name[20];
- float mark;
-}std;
+ float ranking;
+}emp;
                                 //    FUNCTION TO INSERT RECORDS TO THE FILE
 void insert()
 {
  FILE *fp;
  fp = fopen("Record", "a");
- printf("Enter the Roll no   :");
- scanf("%d", &std.rollno);
+ printf("Enter the id   :");
+ scanf("%d", &emp.id);
  printf("Enter the Name      :");
- scanf("%s",std.name);
- printf("Enter the mark      :");
- scanf("%f", &std.mark);
- fwrite(&std, sizeof(std), 1, fp);
+ scanf("%s",emp.name);
+ printf("Enter the ranking      :");
+ scanf("%f", &emp.ranking);
+ fwrite(&emp, sizeof(emp), 1, fp);
  fclose(fp);
 }
                               //    FUNCTION TO DISPLAY RECORDS
@@ -25,9 +25,9 @@ void disp()
 {
  FILE *fp1;
  fp1 = fopen("Record", "r");
- printf("\nRoll Number\tName\tMark\n\n");
- while (fread(&std, sizeof(std), 1, fp1))
- printf("  %d\t\t%s\t%.2f\n", std.rollno, std.name, std.mark);
+ printf("\nRoll Number\tName\tranking\n\n");
+ while (fread(&emp, sizeof(emp), 1, fp1))
+ printf("  %d\t\t%s\t%.2f\n", emp.id, emp.name, emp.ranking);
  fclose(fp1);
 }
 int roll(int rno)
@@ -37,9 +37,9 @@ int roll(int rno)
  fp = fopen("Record", "r");
  while (!feof(fp))
  {
-  fread(&std, sizeof(std), 1, fp);
+  fread(&emp, sizeof(emp), 1, fp);
 
-  if (rno == std.rollno)
+  if (rno == emp.id)
   {
    fclose(fp);
    return 1;
@@ -53,22 +53,22 @@ void search()
 {
  FILE *fp2;
  int r, s, temp;
- printf("\nEnter the Roll no you want to search  :");
+ printf("\nEnter the id you want to search  :");
  scanf("%d", &r);
  temp = roll(r);
  if (temp == 0)
-  printf("Roll No %d is not available in the file\n",r);
+  printf("id %d is not available in the file\n",r);
  else
  {
   fp2 = fopen("Record", "r");
-  while (fread(&std, sizeof(std), 1, fp2))
+  while (fread(&emp, sizeof(emp), 1, fp2))
   {
-   s = std.rollno;
+   s = emp.id;
    if (s == r)
    {
-    printf("\nRoll no = %d", std.rollno);
-    printf("\nName    = %s", std.name);
-    printf("\nMark    = %.2f\n", std.mark);
+    printf("\nid = %d", emp.id);
+    printf("\nName    = %s", emp.name);
+    printf("\nranking    = %.2f\n", emp.ranking);
    }
   }
   fclose(fp2);
@@ -83,26 +83,26 @@ void deletefile()
  FILE *fpo;
  FILE *fpt;
  int r, s;
- printf("Enter the Roll no you want to delete :");
+ printf("Enter the id you want to delete :");
  scanf("%d", &r);
  if (roll(r) == 0)
-  printf("Roll no %d is not available in the file\n", r);
+  printf("id %d is not available in the file\n", r);
  else
  {
   fpo = fopen("Record", "r");
   fpt = fopen("TempFile", "w");
-  while (fread(&std, sizeof(std), 1, fpo))
+  while (fread(&emp, sizeof(emp), 1, fpo))
   {
-   s = std.rollno;
+   s = emp.id;
    if (s != r)
-    fwrite(&std, sizeof(std), 1, fpt);
+    fwrite(&emp, sizeof(emp), 1, fpt);
   }
   fclose(fpo);
   fclose(fpt);
   fpo = fopen("Record", "w");
   fpt = fopen("TempFile", "r");
-  while (fread(&std, sizeof(std), 1, fpt))
-   fwrite(&std, sizeof(std), 1, fpo);
+  while (fread(&emp, sizeof(emp), 1, fpt))
+   fwrite(&emp, sizeof(emp), 1, fpo);
   printf("\nRECORD DELETED\n");
   fclose(fpo);
   fclose(fpt);
@@ -127,48 +127,48 @@ void update()
  {
   fpo = fopen("Record", "r");
   fpt = fopen("TempFile", "w");
-  while (fread(&std, sizeof(std), 1, fpo))
+  while (fread(&emp, sizeof(emp), 1, fpo))
   {
-   s = std.rollno;
+   s = emp.id;
    if (s != r)
-    fwrite(&std, sizeof(std), 1, fpt);
+    fwrite(&emp, sizeof(emp), 1, fpt);
    else
    {
     printf("\n\t1. Update Name of Roll Number %d", r);
-    printf("\n\t2. Update Mark of Roll Number %d", r);
-    printf("\n\t3. Update both Name and Mark of Roll Number %d", r);
+    printf("\n\t2. Update ranking of Roll Number %d", r);
+    printf("\n\t3. Update both Name and ranking of Roll Number %d", r);
     printf("\nEnter your choice:");
     scanf("%d", &ch);
     switch (ch)
     {
     case 1:
      printf("Enter Name:");
-     scanf("%s",std.name);
+     scanf("%s",emp.name);
      break;
     case 2:
-     printf("Enter Mark : ");
-     scanf("%f", &std.mark);
+     printf("Enter ranking : ");
+     scanf("%f", &emp.ranking);
      break;
     case 3:
      printf("Enter Name: ");
-     scanf("%s",std.name);
-     printf("Enter Mark: ");
-     scanf("%f", &std.mark);
+     scanf("%s",emp.name);
+     printf("Enter ranking: ");
+     scanf("%f", &emp.ranking);
      break;
     default:
      printf("Invalid Selection");
      break;
     }
-    fwrite(&std, sizeof(std), 1, fpt);
+    fwrite(&emp, sizeof(emp), 1, fpt);
    }
   }
   fclose(fpo);
   fclose(fpt);
   fpo = fopen("Record", "w");
   fpt = fopen("TempFile", "r");
-  while (fread(&std, sizeof(std), 1, fpt))
+  while (fread(&emp, sizeof(emp), 1, fpt))
   {
-   fwrite(&std, sizeof(std), 1, fpo);
+   fwrite(&emp, sizeof(emp), 1, fpo);
   }
   fclose(fpo);
   fclose(fpt);
@@ -184,7 +184,7 @@ int empty()
  int c = 0;
  FILE *fp;
  fp = fopen("Record", "r");
- while (fread(&std, sizeof(std), 1, fp))
+ while (fread(&emp, sizeof(emp), 1, fp))
   c = 1;
  fclose(fp);
  return c;
@@ -234,4 +234,3 @@ void main()
   }
  } while (c != 6);
 }
-
